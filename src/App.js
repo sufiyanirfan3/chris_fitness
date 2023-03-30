@@ -42,9 +42,9 @@ function App() {
     }
 
     if (age != "" && sex != "" && achieve != "" && weight != "") {
-
+      // workout plan
       var prompt = `
-      Generate me a meal plan for the information below\n
+      Generate me a workout plan for the information below.\n
       Age: ${age}\n
       Gender: ${sex}\n
       Weight: ${weight}\n
@@ -69,8 +69,36 @@ function App() {
       };
       const response = await fetch('https://api.openai.com/v1/chat/completions', requestOptions);
       const data = await response.json();
-      console.log(data.choices[0].message.content);
-      document.getElementById("result").value = data.choices[0].message.content   
+      var workoutPlan= data.choices[0].message.content
+    
+
+      // meal plan
+      var mealPrompt=` Generate me a meal plan with nutritions for the workout plan given below.\n
+      ${workoutPlan}
+      `
+      const DEFAULT_PARAMS1 = {
+        "model": "gpt-3.5-turbo",
+        "messages": [
+          { role: "system", content: "You are ChatGPT, a large language model trained by OpenAI. Answer only to topics related to fitness, nutrition, meal plans etc." },
+          { role: "user", content: mealPrompt }
+        ],
+      }
+
+      const params1 = { ...DEFAULT_PARAMS1 };
+      const requestOptions1 = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + String(process.env.REACT_APP_OPEN_AI_KEY)
+        },
+        body: JSON.stringify(params1)
+      };
+      const response1 = await fetch('https://api.openai.com/v1/chat/completions', requestOptions1);
+      const data1 = await response1.json();
+      var mealPlan= data1.choices[0].message.content
+      
+      document.getElementById("workout_result").value = workoutPlan
+      document.getElementById("meal_result").value = mealPlan
     }
   };
 
@@ -155,12 +183,18 @@ function App() {
           <div class="col-md-6 col-lg-6 col-xl-6 col-12">
             <div class="col-lg-12 mx-auto" id="">
               <div class="form-group mx-auto">
-                <label for="">Your chatgpt generated results
+                <label for="">Workout Plan
                 </label>
-                <textarea class="form-control" placeholder="" rows="16"
-                  id="result"></textarea>
+                <textarea class="form-control" placeholder="" rows="8"
+                  id="workout_result"></textarea>
               </div>
-
+              <br></br>
+              <div class="form-group mx-auto">
+                <label for="">Meal Plan
+                </label>
+                <textarea class="form-control" placeholder="" rows="8"
+                  id="meal_result"></textarea>
+              </div>
 
             </div>
           </div>
