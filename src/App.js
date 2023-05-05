@@ -53,7 +53,7 @@ function App() {
       const DEFAULT_PARAMS = {
         "model": "gpt-3.5-turbo",
         "messages": [
-          { role: "system", content: "You are ChatGPT, a large language model trained by OpenAI.Answer in detail" },
+          { role: "system", content: "You are ChatGPT, a large language model trained by OpenAI. Answer only to topics related to fitness, nutrition, meal plans etc." },
           { role: "user", content: prompt }
         ],
       }
